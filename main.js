@@ -193,8 +193,6 @@ function isCollide({box1,box2}){
 
 let maploop;
 let battleloop;
-let chooseloop
-
 const Battle = {
     start: false
 }
@@ -232,7 +230,9 @@ window.addEventListener('keydown', (e) => {
         yesorno.style.display = 'none';
         Battle.start = true;
     }
-});
+})
+cover.appendChild(yesorno);
+
 const YESORNO = document.createElement('div');
 Object.assign(YESORNO.style, {
     display: 'none',
@@ -258,8 +258,6 @@ window.addEventListener('keydown', (e) => {
     }
 })
 cover.appendChild(YESORNO);
-
-cover.appendChild(yesorno);
 function animate1 () {
     
     maploop = window.requestAnimationFrame(animate1);
@@ -645,8 +643,8 @@ async function animateBattle() {
                     BlueNum.innerText = `${numofBlue}`;
                 }
                 if(continuousWinCount%10===0){
-                    numofRed++;
-                    RedNum.innerText = `${numofRed}`;
+                    allProducts[1].num++;
+                    RedNum.innerText = `${allProducts[1].num}`;
                 }
                 let isThere = false
                 for(let i = 0;i<myPoke.length;i++){
@@ -676,7 +674,6 @@ async function animateBattle() {
             if (damageFrameCount > maxDamageFrames && isOppDamaging) {
                 if(battleStart.oppHealth !== 0){
                     let j = Math.floor(Math.random()*(4));
-                    console.log(j);
                     oppdealDamage(battleStart.oppStatss['attack'],battleStart.myStatss['defense'],battleStart.oppMovePowers[j],battleStart.myStatss['hp'],battleStart.oppMoves[j]);
                 }
                 isOppDamaging = false;
