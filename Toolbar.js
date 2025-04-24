@@ -1,3 +1,4 @@
+const bigBox = document.getElementById('BigBox');
 const RedNum = document.getElementById('RedNum');
 const BlueNum = document.getElementById('BlueNum');
 const topText = document.getElementById('choosetexttext');
@@ -8,20 +9,64 @@ const LossNum = document.getElementById('losenumber');
 const Money = document.getElementById('Money');
 const MoneyNum = document.getElementById('moneynumber');
 const instructions = document.getElementById('Instructions');
-let myMONEY = 200;
-MoneyNum.innerText = `${myMONEY}`;
+let myMONEY = 500;
 let winCount = 0;
 let loseCount = 0;
-let numofRed = 1;
-let numofBlue = 2;
+MoneyNum.innerText = `${myMONEY}`;
+class Product {
+    constructor({name,image,cost,num,originalDiv}){
+        this.name = name;
+        this.image = image;
+        this.cost = cost;
+        this.num = num;
+        this.originalDiv = originalDiv;
+    }
+    createCard(){
+        const SHOPCARD = document.createElement('div');
+        Object.assign(SHOPCARD.style, {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '30%',
+            height: '90%',
+            background: 'rgba(255, 255, 255, 0.39)',
+            cursor: 'pointer',
+            justifyContent: 'space-evenly',
+            borderWidth: '0.2rem',
+            borderColor: '#0A285F',
+            borderStyle: 'solid',
+            borderRadius: '1rem'
+        });
+        SHOPCARD.innerHTML = `<img src ="${this.image}" style="width:8rem;">${this.name}<br>$${this.cost}`;
+        return SHOPCARD;
+    }
+}
+const allProducts=[];
+allProducts[0] = new Product({
+    name: 'Blue Potion',
+    image: './images/Blue Potion.webp',
+    cost: 2000,
+    num: 2,
+    originalDiv: BlueNum
+});
+allProducts[1] = new Product({
+    name: 'Red Potion',
+    image: './images/RedPotion.webp',
+    cost: 5000,
+    num: 1,
+    originalDiv: RedNum
+});
+for(let i = 0;i<allProducts.length;i++){
+    allProducts[i].originalDiv.innerText = `${allProducts[i].num}`;
+}
 BluePotion.addEventListener('click', ()=>{
     if(Battle.start && battleStart.myHealth === 100){
         alert("Health is already full!");
     }
-    else if(Battle.start && numofBlue>0){
+    else if(Battle.start && allProducts[0].num>0){
         battleStart.myHealth = 100;
-        numofBlue--;
-        BlueNum.innerText = `${numofBlue}`;
+        allProducts[0].num--;
+        BlueNum.innerText = `${allProducts[0].num}`;
         myhealthTop.style.width = `${battleStart.myHealth}%`;
         myhealthText.innerText = `Health : ${battleStart.myHealth}%`;
     }
@@ -62,10 +107,52 @@ async function getNextEvolution(pokeName) {
     }
     return null;
 }
+async function renderPokeList() {
+    const oldCards = choosebox.querySelectorAll('.cards');
+    oldCards.forEach(row => row.remove());
+    for (let i = 0; i < myPoke.length; i += 3) {
+        const row = document.createElement('div');
+        row.classList.add('cards');
+
+        const group = myPoke.slice(i, i + 3);
+        for (const pokeName of group) {
+            const card = document.createElement('div');
+            card.classList.add('pokecard');
+
+            const imgDiv = document.createElement('div');
+            imgDiv.classList.add('pokeimg');
+
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('poketext');
+            textDiv.innerText = pokeName;
+            console.log(pokeName)
+            const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`).then(res => res.json());
+            const img = new Image();
+            img.src = data.sprites.front_default;
+            img.style.width = '100%';
+            img.style.height = '100%';
+            imgDiv.appendChild(img);
+
+
+            card.appendChild(imgDiv);
+            card.appendChild(textDiv);
+            card.addEventListener('click', () => {
+                chosenPoke = pokeName;
+                choosebox.style.display = 'none';
+                enterBattle();
+            });
+
+            row.appendChild(card);
+        }
+
+        choosebox.appendChild(row);
+    }
+}
+
 RedPotion.addEventListener('click', async () => {
     const list = document.getElementById('evolveList');
     list.innerHTML = '';
-    if(numofRed > 0){
+    if(allProducts[1].num > 0){
         if(opencount === 0){
             POPUP.style.display = 'block';
             opencount++;
@@ -84,12 +171,13 @@ RedPotion.addEventListener('click', async () => {
                 item.style.margin = '10px 0';
                 item.addEventListener('click', () => {
                     const INDEX = myPoke.indexOf(myPoke[i]);
-                    numofRed--;
-                    RedNum.innerText = `${numofRed}`;
+                    allProducts[1].num--;
+                    RedNum.innerText = `${allProducts[1].num}`;
                     if (INDEX !== -1) {
                         myPoke[INDEX] = toEvolveto;
                     }
                     POPUP.style.display = 'none';
+                    renderPokeList();
                 });
                 list.appendChild(item);
             }
@@ -128,36 +216,27 @@ function createSHOPROW(){
     });
     return SHOPROW;
 }
-function createSHOPCARD(link,name,cost){
-    const SHOPCARD = document.createElement('div');
-    Object.assign(SHOPCARD.style, {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '30%',
-        height: '90%',
-        background: 'rgba(255, 255, 255, 0.39)',
-        cursor: 'pointer',
-        justifyContent: 'space-evenly',
-        borderWidth: '0.2rem',
-        borderColor: '#0A285F',
-        borderStyle: 'solid',
-        borderRadius: '1rem'
-    });
-    SHOPCARD.innerHTML = `<img src ="${link}" style="width:8rem;">${name}<br>$${cost}`;
-    return SHOPCARD;
-}
 SHOP.innerHTML = `<h2>SHOP</h2><ul id="shopList"></ul>`;
-const a = createSHOPROW();
-const b = createSHOPCARD('./images/Blue Potion.png','Blue Potion',500);
-const c = createSHOPCARD('./images/RedPotion.png','Red Potion',1000);
-const mySHOPCARDS = [b,c];
-const moneySHOPCARDS = [500,1000];
-const valSHOPCARDS = [numofBlue,numofRed];
-const divSHOPCARDS = [BlueNum,RedNum];
-a.appendChild(b);
-a.appendChild(c);
-SHOP.appendChild(a);
+async function createShop() {
+    for (let i = 0; i < allProducts.length; i += 2) {
+        const row = createSHOPROW();
+        const group = allProducts.slice(i, i + 2);
+        for (let j = 0 ;j<2;j++) {
+            const card = allProducts[j+i].createCard();
+            card.addEventListener('click', ()=> {
+                if(myMONEY >= allProducts[j+i].cost){
+                    myMONEY-= allProducts[j+i].cost;
+                    MoneyNum.innerText = `${myMONEY}`;  
+                    allProducts[j+i].num++;
+                    allProducts[i+j].originalDiv.innerText = `${allProducts[i+j].num}`;
+                }
+            });
+            row.appendChild(card);
+        }
+        SHOP.appendChild(row);
+    }
+}
+createShop();
 cover.appendChild(SHOP);
 Money.addEventListener('click',() => {
     if(opencount === 0){
@@ -169,17 +248,6 @@ Money.addEventListener('click',() => {
         opencount--;
     }
 });
-for(let i = 0;i<mySHOPCARDS.length;i++){
-    mySHOPCARDS[i].addEventListener('click', ()=> {
-        if(myMONEY >= moneySHOPCARDS[i]){
-            myMONEY-=moneySHOPCARDS[i];
-            MoneyNum.innerText = `${myMONEY}`;  
-            valSHOPCARDS[i]++;
-            divSHOPCARDS[i].innerText = `${valSHOPCARDS[i]}`;
-        }
-    })
-}
-
 instructions.addEventListener('click', () => {
     if(welcome.style.display === 'block')
         welcome.style.display = 'none';
