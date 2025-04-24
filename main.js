@@ -232,7 +232,32 @@ window.addEventListener('keydown', (e) => {
         yesorno.style.display = 'none';
         Battle.start = true;
     }
+});
+const YESORNO = document.createElement('div');
+Object.assign(YESORNO.style, {
+    display: 'none',
+    position: 'absolute',
+    fontFamily: 'Pokemon',
+    bottom: '5%',
+    left: '10%',
+    width: '75%',
+    paddingLeft: '5%',
+    paddingTop: '1rem',
+    paddingBottom: '1rem',
+    textAlign: 'left',
+    background: '#F1DF93',
+    color: 'black',
+    border: '2px solid black',
+    zIndex: 1005,
+});
+YESORNO.innerHTML = `<h3>This is the Local Multi Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && YESORNO.style.display === 'block') {
+        YESORNO.style.display = 'none';
+        Battle.start = true;
+    }
 })
+cover.appendChild(YESORNO);
 
 cover.appendChild(yesorno);
 function animate1 () {
@@ -276,15 +301,20 @@ function animate1 () {
             yesorno.style.display = 'none';
     }
     if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
+        isinBattleZone = false;
         for(let i = 0; i<multiAreas.length;i++){
             const MULTIZONE = multiAreas[i];
             console.log("hello");
             if (isCollide({ box1: Player, box2: MULTIZONE })) {
-                Multi.start = true;
+                isinBattleZone = true;
                 break;
             }
-            
         }
+        if(isinBattleZone){
+            YESORNO.style.display = 'block';
+        }
+        else    
+            YESORNO.style.display = 'none';
     }
     let moving =  true;
     Player.moves = false;
