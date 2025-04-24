@@ -402,7 +402,7 @@ async function enterBattle() {
     startBattle();
 }
 async function loadScreen(goORnogo) {
-    const data = await fetch('https://pokeapi.co/api/v2/pokemon/pikachu')
+    const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${chosenPoke}`)
         .then(res => res.json());
     const pikachu1 = new Image();
     const pikachu2 = new Image();
