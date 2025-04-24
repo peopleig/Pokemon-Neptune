@@ -639,8 +639,8 @@ async function animateBattle() {
                 MoneyNum.innerText = `${myMONEY}`;
                 WinNum.innerText = `${winCount}`;
                 if(continuousWinCount%5===0){
-                    numofBlue++;
-                    BlueNum.innerText = `${numofBlue}`;
+                    allProducts[0].num++;
+                    BlueNum.innerText = `${allProducts[0].num++}`;
                 }
                 if(continuousWinCount%10===0){
                     allProducts[1].num++;
