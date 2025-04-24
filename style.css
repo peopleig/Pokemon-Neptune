@@ -18,6 +18,11 @@
     height: 100vh;
     background-color: rgb(196, 196, 223);
 }
+#BigBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 #popup {
     position: absolute;
     background-color: #FFCC00;
@@ -52,6 +57,8 @@
 }
 #cover {
     position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 #box {
@@ -259,8 +266,7 @@ h3 {
 #EOB {
     position: absolute;
     background-color: #FFCC00;
-    left:25%;
-    width: 50%;
+    width: 30rem;
     top: 25%;
     height: 50%;
     color: #0A285F;
@@ -290,7 +296,7 @@ h3 {
     height: 6rem;
     background-color: #FFCC00;
     color: #0A285F;
-    width: 100%;
+    width: 64.25rem;
     justify-content: space-evenly;
     align-items: center;
 }
