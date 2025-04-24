@@ -560,7 +560,8 @@ const BTNS = {};
 for(let i = 0;i<4;i++){
     BTNS[i] = document.getElementById(`btn${i+1}`);
     BTNS[i].addEventListener('click',() =>{
-        mydealDamage(battleStart.myStatss['attack'],battleStart.oppStatss['defense'],battleStart.myMovePowers[i],battleStart.oppStatss['hp'],battleStart.myMoves[i]);
+        if(!isOppDamaging)
+            mydealDamage(battleStart.myStatss['attack'],battleStart.oppStatss['defense'],battleStart.myMovePowers[i],battleStart.oppStatss['hp'],battleStart.myMoves[i]);
     })
 }
 const myhealthText = document.getElementById('myhealthbartext');
