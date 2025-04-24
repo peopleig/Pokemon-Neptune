@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon-Neptune</title>
+    <link href="style.css" rel="stylesheet"> 
+</head>
+<body>
+    <div id="Outer">
+        <div id="BigBox">
+            <div id="cover">
+                <canvas id="box"></canvas>
+                <div id="popup">
+                    <h1>Welcome!</h1>
+                    <ul>
+                        <li>Use <strong>W, A, S, D</strong> or the <strong>Arrow Keys</strong> to move.</li>
+                        <li>You'll be provided with <strong>6 starter Pokémons</strong> and <strong>2 Potions</strong>.</li>
+                        <li>The <strong>Blue Potion</strong> will restore your character's health to 100% mid-battle.</li>
+                        <li>The <strong>Red Potion</strong> will evolve whatever Pokémon you choose by one generation, but <strong>not during a battle</strong>.</li>
+                        <li>You will win some <strong>Money</strong> after every win</li>
+                        <li>Clicking on the <strong>Money</strong> will open <strong>the Shop</strong>, clicking it again will close it</li>
+                        <li>Battles will occur with random Pokémon if you venture into <strong>Dirt/Grass/Sand patches</strong>.</li>
+                        <li>Winning <strong>5 continuous battles</strong> gives you <strong>1 Blue Potion</strong>.</li>
+                        <li>Winning <strong>10 continuous battles</strong> gives you <strong>1 Red Potion</strong>.</li>
+                        <li><strong>All the Best!</strong></li>
+                      </ul>
+                      <p>Press SPACE to continue...</p>
+                </div>
+                <div id="UI">
+                    <div id="myhealth" class="health">
+                        <div class="name_level">
+                            <h1>Name</h1>
+                            <h3>Level 1</h3>
+                        </div>
+                        <div class="healthbar">
+                            <p id="myhealthbartext" class="healthbartext">Health : 100%</p>
+                            <div id="myhealthbartop" class="healthbartop"></div>
+                        </div>
+                    </div>
+                    <div id="opphealth" class="health">
+                        <div class="name_level">
+                            <h1>Name</h1>
+                            <h3>Level 1</h3>
+                        </div>
+                        <div class="healthbar">
+                            <p id="opphealthbartext" class="healthbartext">Health : 100%</p>
+                            <div id="opphealthbartop" class="healthbartop"></div>
+                        </div>
+                    </div>
+                    <div id="actions">
+                                <button id="btn1" class="attackbtn">Attack 1</button>
+                                <button id="btn2" class="attackbtn">Attack 2</button>
+                                <button id="btn3" class="attackbtn">Attack 3</button>
+                                <button id="btn4" class="attackbtn">Attack 4</button>  
+                    </div>
+                    <div id="battlelog">Battlelog
+                        <div id="datainbattlelog"></div>
+                    </div>
+                </div>
+                <div id="choose">
+                    <div id="choosetext"><img src="./images/Pokeball.png" id="backbutton" title="Back"><p id="choosetexttext">CHOOSE YOUR POKEMON</p></div>
+                    <div class="cards">
+                        <div class="pokecard">
+                            <div class="pokeimg"></div>
+                            <div class="poketext">Name of Pokemon</div>
+                        </div> 
+                        <div class="pokecard">
+                            <div class="pokeimg"></div>
+                            <div class="poketext">Name of Pokemon</div>
+                        </div> 
+                        <div class="pokecard">
+                            <div class="pokeimg"></div>
+                            <div class="poketext">Name of Pokemon</div>
+                        </div>   
+                    </div>
+                    <div class="cards">
+                        <div class="pokecard">
+                            <div class="pokeimg"></div>
+                            <div class="poketext">pikachuu</div>
+                        </div> 
+                        <div class="pokecard">
+                            <div class="pokeimg"></div>
+                            <div class="poketext">pikachu</div>
+                        </div> 
+                    </div>
+                </div>
+                <div id="EOB">
+                    <p id="YOU">YOU WON!</p>
+                    <p id="info">This Pokemon is now added to your arsenal</p>
+                    <p id="space">Press <b>Space</b> to Continue...</p>
+                </div>
+            </div>
+            <div id="toolbar">
+                <div class="Buttons" id="Money" title="Money"><h1 id="moneynumber">0</h1><h3>$$$</h3></div>
+                <div class="Buttons" id="Wincount"><h1 id="winnumber">0</h1><h3>Wins</h3></div>
+                <div class="Buttons" id="Losecount"><h1 id="losenumber">0</h1><h3>Loss</h3></div>
+                <div class="Buttons" id="Blue Potion"><img src="./images/Blue Potion.png" id="Blue Potion"><p id="BlueNum">2</p></div>
+                <div class="Buttons" id="Red Potion"><img src="./images/RedPotion.png" id="Red Potions"><p id="RedNum">1</p></div>
+                <div class="Buttons" id="Instructions" title="Instructions"><img src="./images/List.png" ></div>
+            </div>
+        </div>
+    </div>
+    <script src="Toolbar.js"></script>
+    <script src="data/battles.js"></script>
+    <script src="data/multiplayer.js"></script>
+    <script src = "data/collisions.js"></script>
+    <script src="main.js"></script>
+</body> 
+</html>
