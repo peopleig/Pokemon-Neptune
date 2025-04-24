@@ -15,7 +15,10 @@ let loseCount = 0;
 let numofRed = 1;
 let numofBlue = 2;
 BluePotion.addEventListener('click', ()=>{
-    if(Battle.start && numofBlue>0){
+    if(Battle.start && battleStart.myHealth === 100){
+        alert("Health is already full!");
+    }
+    else if(Battle.start && numofBlue>0){
         battleStart.myHealth = 100;
         numofBlue--;
         BlueNum.innerText = `${numofBlue}`;
