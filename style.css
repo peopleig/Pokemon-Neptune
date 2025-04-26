@@ -122,7 +122,6 @@
     left: 1rem;
 }
 .name_level {
-
     margin-bottom: 0.5rem;
 }
 h1 {
@@ -251,11 +250,11 @@ h3 {
 .poketext {
     display: flex;
     position: absolute;
-    width: auto;
     height: 20%;
-    font-size: 0.8rem;
     bottom: 0;
     left: 0;
+    font-size: 0.8rem;
+    overflow-y: hidden;
     color:#0A285F;
     overflow-x: hidden;
     word-break: break-all;
