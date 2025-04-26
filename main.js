@@ -675,7 +675,7 @@ ghostbg.src = './images/ghostbg.jpg';
 const firebg = new Image();
 firebg.src = './images/Firebg.png';
 
-const myPoke = ['charmander','bulbasaur','pikachu','pichu'];
+const myPoke = ['charmander','bulbasaur','pikachu','squirtle'];
 const nonArsenal = [];
 let chosenPoke;
 const choosebox = document.getElementById('choose');
