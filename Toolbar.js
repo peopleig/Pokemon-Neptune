@@ -61,7 +61,31 @@ for(let i = 0;i<allProducts.length;i++){
 }
 BluePotion.addEventListener('click', ()=>{
     if(Battle.start && battleStart.myHealth === 100){
-        alert("Health is already full!");
+        const alreadyFullPopUp = document.createElement('div');
+        Object.assign(alreadyFullPopUp.style, {
+            display: 'flex',
+            width: '40%',
+            height: '20%',
+            top: '40%',
+            background: 'rgba(241,223,147)',
+            position: 'absolute',
+            color: '#0A285F',
+            borderColor: '#D5A100',
+            borderStyle: 'solid',
+            borderWidth: '0.5rem',
+            fontSize: '1.5rem',
+            fontFamily: 'Pokemon',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center'
+        })
+        alreadyFullPopUp.innerHTML = '<p>Health is already Full!<p>';
+        cover.appendChild(alreadyFullPopUp);
+        cancelAnimationFrame(battleloop);
+        setTimeout(() => {
+            alreadyFullPopUp.remove();
+            animateBattle();
+        }, 3000);
     }
     else if(Battle.start && allProducts[0].num>0){
         battleStart.myHealth = 100;
@@ -152,34 +176,42 @@ async function renderPokeList() {
 RedPotion.addEventListener('click', async () => {
     const list = document.getElementById('evolveList');
     list.innerHTML = '';
-    if(allProducts[1].num > 0){
-        if(opencount === 0){
-            POPUP.style.display = 'block';
-            opencount++;
-        }
-        else if (opencount === 1){
-            POPUP.style.display = 'none';
-            opencount--;
-        }
+    if(!Battle.start){
+        if(allProducts[1].num > 0){
+            if(opencount === 0){
+                POPUP.style.display = 'block';
+                opencount++;
+            }
+            else if (opencount === 1){
+                POPUP.style.display = 'none';
+                opencount--;
+            }
 
-        for (let i = 0;i<myPoke.length;i++) {
-            const toEvolveto = await getNextEvolution(myPoke[i]);
-            if (toEvolveto) {
-                const item = document.createElement('li');
-                item.innerText = `${myPoke[i]} -> ${toEvolveto}`;
-                item.style.cursor = 'pointer';
-                item.style.margin = '10px 0';
-                item.addEventListener('click', () => {
-                    const INDEX = myPoke.indexOf(myPoke[i]);
-                    allProducts[1].num--;
-                    RedNum.innerText = `${allProducts[1].num}`;
-                    if (INDEX !== -1) {
-                        myPoke[INDEX] = toEvolveto;
-                    }
-                    POPUP.style.display = 'none';
-                    renderPokeList();
-                });
-                list.appendChild(item);
+            for (let i = 0;i<myPoke.length;i++) {
+                const toEvolveto = await getNextEvolution(myPoke[i]);
+                if (toEvolveto) {
+                    const item = document.createElement('li');
+                    item.innerText = `${myPoke[i]} -> ${toEvolveto}`;
+                    item.style.cursor = 'pointer';
+                    item.style.margin = '10px 0';
+                    item.addEventListener('click', () => {
+                        const INDEX = myPoke.indexOf(myPoke[i]);
+                        allProducts[1].num--;
+                        RedNum.innerText = `${allProducts[1].num}`;
+                        if (INDEX !== -1) {
+                            myPoke[INDEX] = toEvolveto;
+                        }
+                        for(let i = 0;i<myPoke.length;i++){
+                            if(i!==INDEX && myPoke[i] === toEvolveto){
+                                myPoke.splice(i,1);
+                                break;
+                            }
+                        }
+                        POPUP.style.display = 'none';
+                        renderPokeList();
+                    });
+                    list.appendChild(item);
+                }
             }
         }
     }
