@@ -12,13 +12,12 @@ const player2 = new Image();
 player2.src = './images/playerLeft.png';
 const player3 = new Image();
 player3.src = './images/playerRight.png';
-map.src = './images/FinalMap.png';
+map.src = './images/CompleteMap.png';
 const fore = new Image();
-fore.src = './images/Foreground1.png';
-
+fore.src = './images/Foreground.png';
 const colMap = []
-for (let i = 0; i<collisions.length;i+=70) {
-    colMap.push(collisions.slice(i,i+70));
+for (let i = 0; i<collisions.length;i+=120) {
+    colMap.push(collisions.slice(i,i+120));
 }
 class bndry {
     
@@ -34,8 +33,8 @@ class bndry {
 }
 const boundaries = [];
 const offset = {
-    x: 0,
-    y: -50
+    x: -320,
+    y: -400
 }
 colMap.forEach((row, i) => {
     row.forEach((sign, j) => {
@@ -51,8 +50,8 @@ colMap.forEach((row, i) => {
 })
 
 const battleMap = []
-for (let i =0; i<battlezones.length;i+=70){
-    battleMap.push(battlezones.slice(i,i+70));
+for (let i =0; i<battlezones.length;i+=120){
+    battleMap.push(battlezones.slice(i,i+120));
 }
 const battleAreas = [];
 battleMap.forEach((row, i) => {
@@ -67,15 +66,75 @@ battleMap.forEach((row, i) => {
         }
     })
 })
-const multiMap = [];
-for (let i =0; i<multiarea.length;i+=70){
-    multiMap.push(multiarea.slice(i,i+70));
+const waterMap = [];
+for (let i =0; i<waterarea.length;i+=120){
+    waterMap.push(waterarea.slice(i,i+120));
 }
-const multiAreas = [];
-multiMap.forEach((row, i) => {
+const waterAreas = [];
+waterMap.forEach((row, i) => {
     row.forEach((sign, j) => {
-        if(sign === 13307){
-            multiAreas.push(new bndry({
+        if(sign === 18021){
+            waterAreas.push(new bndry({
+                position: {
+                    x: j*32 + offset.x,
+                    y: i*32 + offset.y
+                }  
+            }))
+        }
+    })
+})
+const fireMap = [];
+for (let i =0; i<firearea.length;i+=120){
+    fireMap.push(firearea.slice(i,i+120));
+}
+const fireAreas = [];
+fireMap.forEach((row, i) => {
+    row.forEach((sign, j) => {
+        if(sign === 18021){
+            fireAreas.push(new bndry({
+                position: {
+                    x: j*32 + offset.x,
+                    y: i*32 + offset.y
+                }  
+            }))
+        }
+    })
+})
+const ghostMap = [];
+for (let i =0; i<ghostarea.length;i+=120){
+    ghostMap.push(ghostarea.slice(i,i+120));
+}
+const ghostAreas = [];
+ghostMap.forEach((row, i) => {
+    row.forEach((sign, j) => {
+        if(sign === 18021){
+            ghostAreas.push(new bndry({
+                position: {
+                    x: j*32 + offset.x,
+                    y: i*32 + offset.y
+                }  
+            }))
+        }
+    })
+})
+const newMap = [];
+for (let i =0; i<newarea.length;i+=120){
+    newMap.push(newarea.slice(i,i+120));
+}
+const spinAreas = [];
+const hospiAreas = [];
+newMap.forEach((row, i) => {
+    row.forEach((sign, j) => {
+        if(sign === 16043){
+            spinAreas.push(new bndry({
+                position: {
+                    x: j*32 + offset.x,
+                    y: i*32 + offset.y
+                }  
+            }))
+        }
+        else if(sign === 16174){
+            hospiAreas.push(new bndry({
                 position: {
                     x: j*32 + offset.x,
                     y: i*32 + offset.y
@@ -166,12 +225,6 @@ const background = new sprites ({
     },
     image: map 
 })
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'm') {
-        console.log("Manual multiplayer trigger");
-        Multi.start = true;
-    }
-});
 const foreground = new sprites ({
     position: {
         x: offset.x,
@@ -180,7 +233,7 @@ const foreground = new sprites ({
     image: fore
 })
  
-const movables = [background, ...boundaries, foreground, ...battleAreas, ...multiAreas];
+const movables = [background, ...boundaries, foreground, ...battleAreas, ...waterAreas,...fireAreas,...ghostAreas,...spinAreas,...hospiAreas];
 
 function isCollide({box1,box2}){
     return (
@@ -196,7 +249,7 @@ let battleloop;
 const Battle = {
     start: false
 }
-const Multi= {
+const Water= {
     start: false
 }
 const welcome = document.getElementById('popup');
@@ -207,8 +260,8 @@ window.addEventListener('keydown', (e) => {
     }
 });
 const cover = document.getElementById('cover');
-const yesorno = document.createElement('div');
-Object.assign(yesorno.style, {
+const grassBattleBox = document.createElement('div');
+Object.assign(grassBattleBox.style, {
     display: 'none',
     position: 'absolute',
     fontFamily: 'Pokemon',
@@ -224,17 +277,17 @@ Object.assign(yesorno.style, {
     border: '2px solid black',
     zIndex: 1005,
 });
-yesorno.innerHTML = `<h3>This is the Grass Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
+grassBattleBox.innerHTML = `<h3>This is the Grass Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
 window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && yesorno.style.display === 'block') {
-        yesorno.style.display = 'none';
+    if (e.code === 'Space' && grassBattleBox.style.display === 'block') {
+        grassBattleBox.style.display = 'none';
         Battle.start = true;
     }
 })
-cover.appendChild(yesorno);
+cover.appendChild(grassBattleBox);
 
-const YESORNO = document.createElement('div');
-Object.assign(YESORNO.style, {
+const waterBattleBox = document.createElement('div');
+Object.assign(waterBattleBox.style, {
     display: 'none',
     position: 'absolute',
     fontFamily: 'Pokemon',
@@ -250,22 +303,128 @@ Object.assign(YESORNO.style, {
     border: '2px solid black',
     zIndex: 1005,
 });
-YESORNO.innerHTML = `<h3>This is the Local Multi Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
+waterBattleBox.innerHTML = `<h3>This is the Water Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
 window.addEventListener('keydown', (e) => {
-    if (e.code === 'Space' && YESORNO.style.display === 'block') {
-        YESORNO.style.display = 'none';
+    if (e.code === 'Space' && waterBattleBox.style.display === 'block') {
+        waterBattleBox.style.display = 'none';
         Battle.start = true;
     }
 })
-cover.appendChild(YESORNO);
+cover.appendChild(waterBattleBox);
+const fireBattleBox = document.createElement('div');
+Object.assign(fireBattleBox.style, {
+    display: 'none',
+    position: 'absolute',
+    fontFamily: 'Pokemon',
+    bottom: '5%',
+    left: '10%',
+    width: '75%',
+    paddingLeft: '5%',
+    paddingTop: '1rem',
+    paddingBottom: '1rem',
+    textAlign: 'left',
+    background: '#F1DF93',
+    color: 'black',
+    border: '2px solid black',
+    zIndex: 1005,
+});
+fireBattleBox.innerHTML = `<h3>This is the Fire Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && fireBattleBox.style.display === 'block') {
+        fireBattleBox.style.display = 'none';
+        Battle.start = true;
+    }
+})
+cover.appendChild(fireBattleBox);
+const ghostBattleBox = document.createElement('div');
+Object.assign(ghostBattleBox.style, {
+    display: 'none',
+    position: 'absolute',
+    fontFamily: 'Pokemon',
+    bottom: '5%',
+    left: '10%',
+    width: '75%',
+    paddingLeft: '5%',
+    paddingTop: '1rem',
+    paddingBottom: '1rem',
+    textAlign: 'left',
+    background: '#F1DF93',
+    color: 'black',
+    border: '2px solid black',
+    zIndex: 1005,
+});
+ghostBattleBox.innerHTML = `<h3>This is the Ghost Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && ghostBattleBox.style.display === 'block') {
+        ghostBattleBox.style.display = 'none';
+        Battle.start = true;
+    }
+})
+cover.appendChild(ghostBattleBox);
+const spinBattleBox = document.createElement('div');
+Object.assign(spinBattleBox.style, {
+    display: 'none',
+    position: 'absolute',
+    fontFamily: 'Pokemon',
+    bottom: '5%',
+    left: '10%',
+    width: '75%',
+    paddingLeft: '5%',
+    paddingTop: '1rem',
+    paddingBottom: '1rem',
+    textAlign: 'center',
+    background: '#F1DF93',
+    color: 'black',
+    border: '2px solid black',
+    zIndex: 1005,
+});
+spinBattleBox.innerHTML = `<h3>This is the Spinning Wheel of Fortune</h3><br><h3>Press Space to Continue</h3>`;
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && spinBattleBox.style.display === 'block') {
+        spinBattleBox.style.display = 'none';
+        Battle.start = true;
+    }
+})
+cover.appendChild(spinBattleBox);
+const hospiBattleBox = document.createElement('div');
+Object.assign(hospiBattleBox.style, {
+    display: 'none',
+    position: 'absolute',
+    fontFamily: 'Pokemon',
+    bottom: '5%',
+    left: '10%',
+    width: '75%',
+    paddingLeft: '5%',
+    paddingTop: '1rem',
+    paddingBottom: '1rem',
+    textAlign: 'left',
+    background: '#F1DF93',
+    color: 'black',
+    border: '2px solid black',
+    zIndex: 1005,
+});
+hospiBattleBox.innerHTML = `<h3>This is the Ghost Battle Zone</h3><br><h3>Press Space to Start Battle</h3>`;
+window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space' && hospiBattleBox.style.display === 'block') {
+        hospiBattleBox.style.display = 'none';
+        Battle.start = true;
+    }
+})
+cover.appendChild(hospiBattleBox);
+
 function animate1 () {
-    
     maploop = window.requestAnimationFrame(animate1);
     background.draw();
-    multiAreas.forEach(bndry => {
+    waterAreas.forEach(bndry => {
         bndry.draw();
     })
     battleAreas.forEach(bndry => {
+        bndry.draw();
+    })
+    fireAreas.forEach(bndry => {
+        bndry.draw();
+    })
+    ghostAreas.forEach(bndry => {
         bndry.draw();
     })
     Player.draw();
@@ -279,40 +438,84 @@ function animate1 () {
         return;
     }
     let isinBattleZone = false;
-    if(Multi.start){
-        cancelAnimationFrame(maploop);
-        choosemyPokemon();
-        return;
-    }
     if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
         isinBattleZone = false;
         for(let i = 0; i<battleAreas.length;i++){
             const BATTLEZONE = battleAreas[i];
             if((isCollide({box1: Player, box2: BATTLEZONE}))){
                 isinBattleZone = true;
+                battleStart.map = 0;
                 break;
             }
         }
         if(isinBattleZone)
-            yesorno.style.display = 'block';
+            grassBattleBox.style.display = 'block';
         else    
-            yesorno.style.display = 'none';
+            grassBattleBox.style.display = 'none';
     }
     if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
         isinBattleZone = false;
-        for(let i = 0; i<multiAreas.length;i++){
-            const MULTIZONE = multiAreas[i];
-            console.log("hello");
-            if (isCollide({ box1: Player, box2: MULTIZONE })) {
+        for(let i = 0; i<waterAreas.length;i++){
+            const WATERZONE = waterAreas[i];
+            if (isCollide({ box1: Player, box2: WATERZONE })) {
                 isinBattleZone = true;
+                battleStart.map = 1;
                 break;
             }
         }
         if(isinBattleZone){
-            YESORNO.style.display = 'block';
+            waterBattleBox.style.display = 'block';
         }
         else    
-            YESORNO.style.display = 'none';
+            waterBattleBox.style.display = 'none';
+    }
+    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
+        isinBattleZone = false;
+        for(let i = 0; i<fireAreas.length;i++){
+            const FIREZONE = fireAreas[i];
+            if (isCollide({ box1: Player, box2: FIREZONE })) {
+                isinBattleZone = true;
+                battleStart.map = 3;
+                break;
+            }
+        }
+        if(isinBattleZone){
+            fireBattleBox.style.display = 'block';
+        }
+        else    
+            fireBattleBox.style.display = 'none';
+    }
+    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
+        isinBattleZone = false;
+        for(let i = 0; i<ghostAreas.length;i++){
+            const GHOSTZONE = ghostAreas[i];
+            if (isCollide({ box1: Player, box2: GHOSTZONE })) {
+                isinBattleZone = true;
+                battleStart.map = 2;
+                break;
+            }
+        }
+        if(isinBattleZone){
+            ghostBattleBox.style.display = 'block';
+        }
+        else    
+            ghostBattleBox.style.display = 'none';
+    }
+    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed){
+        isinBattleZone = false;
+        for(let i = 0; i<spinAreas.length;i++){
+            const SPINZONE = spinAreas[i];
+            if (isCollide({ box1: Player, box2: SPINZONE })) {
+                isinBattleZone = true;
+                battleStart.map = 2;
+                break;
+            }
+        }
+        if(isinBattleZone){
+            spinBattleBox.style.display = 'block';
+        }
+        else    
+            spinBattleBox.style.display = 'none';
     }
     let moving =  true;
     Player.moves = false;
@@ -398,10 +601,20 @@ animate1();
 const UI = document.getElementById('UI');
 async function enterBattle() {
     await loadScreen( 1===1);
-    UI.style.display = 'block'; 
+    if(!requestNewPokemon)
+        UI.style.display = 'block'; 
+    else{
+        console.log(battleStart.myPokeNames);
+        myName.textContent = `${battleStart.myPokeNames}`;
+        for(let i = 0;i<4;i++){
+            BTNS[i].textContent = battleStart.myMoves[i];
+        }
+        UI.style.display = 'block';
+    }
     startBattle();
 }
 async function loadScreen(goORnogo) {
+
     const data = await fetch(`https://pokeapi.co/api/v2/pokemon/${chosenPoke}`)
         .then(res => res.json());
     const pikachu1 = new Image();
@@ -451,23 +664,26 @@ async function loadScreen(goORnogo) {
             }
         }, 500);
     });
-    if(goORnogo){
-        enterBattle();
-    }
 }
 
 const battlebg = new Image();
 battlebg.src = './images/GrassBG.webp';
+const beachbattlebg = new Image();
+beachbattlebg.src = './images/beachbattlebg.jpg';
+const ghostbg = new Image();
+ghostbg.src = './images/ghostbg.jpg';
+const firebg = new Image();
+firebg.src = './images/Firebg.png';
 
-const myPoke = ['charmander','cyndaquil','mudkip','bulbasaur','snivy','pikachu'];
+const myPoke = ['charmander','bulbasaur','pikachu','pichu'];
 const nonArsenal = [];
 let chosenPoke;
 const choosebox = document.getElementById('choose');
 const backbutton = document.getElementById('backbutton');
+let hasChosenPoke = 0;
 async function choosemyPokemon() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     choosebox.style.display = 'block';
-    if (document.querySelectorAll('.pokecard').length === myPoke.length) return;
 
     const oldCards = choosebox.querySelectorAll('.cards');
     oldCards.forEach(row => row.remove());
@@ -492,12 +708,11 @@ async function choosemyPokemon() {
             img.style.width = '100%';
             img.style.height = '100%';
             imgDiv.appendChild(img);
-
-
             card.appendChild(imgDiv);
             card.appendChild(textDiv);
             card.addEventListener('click', () => {
                 chosenPoke = pokeName;
+                battleStart.myPokeNames = pokeName;
                 choosebox.style.display = 'none';
                 enterBattle();
             });
@@ -529,6 +744,7 @@ const battleStart = {
     oppStatss: {},
     myHealth: 100,
     oppHealth: 100,
+    map: null,
     drawNow: false
 }
 class Pokemon {
@@ -569,7 +785,10 @@ const opphealthTop = document.getElementById('opphealthbartop');
 const battleLog = document.getElementById('datainbattlelog');
 async function startBattle() {
     const chosen = chosenPoke;
-    await loadPoke(chosen); 
+    if(!requestNewPokemon)
+        await loadPoke(chosen); 
+    else 
+        await loadAnotherPoke(chosen);
     animateBattle(); 
 }
 window.addEventListener('keydown', (e) => {
@@ -588,10 +807,20 @@ let bobbingOffset = 0;
 let bobbingFrameCount = 0;
 let whenSomeoneDies = 0;
 let continuousWinCount = 0;
+let requestNewPokemon = false;
+let howManyTimesNewPokemon = 0;
 async function animateBattle() {
     battleloop = window.requestAnimationFrame(animateBattle);
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(battlebg, 0,0,canvas.width,canvas.height);
+    if(battleStart.map === 0)
+        ctx.drawImage(battlebg,0,0,canvas.width,canvas.height);
+    else if(battleStart.map === 1 )
+        ctx.drawImage(beachbattlebg, 0,0,canvas.width,canvas.height);
+    else if(battleStart.map === 2){
+        ctx.drawImage(ghostbg,0,0,canvas.width,canvas.height);
+    }
+    else if(battleStart.map === 3)
+        ctx.drawImage(firebg,0,0,canvas.width,canvas.height);
     if(battleStart.drawNow){
         bobbingFrameCount++;
         let myImg = battleStart.myPokeImage;
@@ -610,17 +839,29 @@ async function animateBattle() {
         else if(battleStart.myHealth <= 0){
             whenSomeoneDies++;
             if(whenSomeoneDies === 1){
-                loseCount++;
+                howManyTimesNewPokemon++;
                 continuousWinCount = 0;
-                LossNum.innerText = `${loseCount}`;
-                myPoke.push(...nonArsenal);
-                nonArsenal.length = 0;
+                console.log(myPoke,nonArsenal);
+                // for(let i = 0;i<nonArsenal.length;i++){
+                //     myPoke[myPoke.length] = nonArsenal[i];
+                // }
+                // nonArsenal.length = 0;
                 const index = myPoke.indexOf(`${battleStart.myPokeNames}`);
-                if(index !== -1){
-                    const element = myPoke.splice(index,1)[0];
-                    nonArsenal.push(element);
+                myPoke.splice(index,1);
+                nonArsenal.push(`${battleStart.myPokeNames}`);
+                if(howManyTimesNewPokemon <3)
+                    requestNewPokemon = true;
+                else{
+                    if(nonArsenal.length > 3){
+                        let x = nonArsenal;
+                        for(let i =0;i<x.length - 3;i++){
+                            myPoke[myPoke.length] = x[i];
+                        }
+                        nonArsenal.length = 0;;
+                    }
+                    requestNewPokemon = false;
                 }
-                myDied();
+                myDied(requestNewPokemon);
             }
             if(whenSomeoneDies < 50){
                 ctx.drawImage(oppImg, 500, 100, 350, 350 - bobbingOffset); 
@@ -646,6 +887,8 @@ async function animateBattle() {
                     allProducts[1].num++;
                     RedNum.innerText = `${allProducts[1].num}`;
                 }
+                myPoke.push(...nonArsenal);
+                nonArsenal.length = 0;
                 let isThere = false
                 for(let i = 0;i<myPoke.length;i++){
                     if(myPoke[i] === battleStart.oppPokeNames){
@@ -655,8 +898,6 @@ async function animateBattle() {
                 if(!isThere){
                     myPoke[myPoke.length] = battleStart.oppPokeNames;
                 }
-                myPoke.push(...nonArsenal);
-                nonArsenal.length = 0;
                 oppDied(addMoney);
             }
             if(whenSomeoneDies < 50){
@@ -684,8 +925,33 @@ async function animateBattle() {
         }
     }
 }
+
 async function loadPoke(myPokeName) {
-    const oppPoke = ['snivy','treecko','leafeon','ivysaur','meganium','meowscarada'];
+    let oppPoke;
+    if(battleStart.map === 0 && winCount <= 5)
+        oppPoke = ['snivy','treecko','ivysaur','gloom','paras','chikorita','exeggcute'];
+    else if(battleStart.map === 0 && winCount>5 && winCount<=15 )
+        oppPoke = ['leafeon','meganium','meowscarada','chikorita','exeggutor','venusaur','vileplume'];
+    else if(battleStart.map === 0 && winCount > 15)
+        oppPoke = ['leafeon','meowscarada','raichu-alola','virizion','sceptile','zarude'];
+    else if(battleStart.map === 1 && winCount <=5)
+        oppPoke = ['squirtle','psyduck','poliwag','magikarp','slowbro','horsea','wartortle','suicune'];
+    else if(battleStart.map === 1 && winCount>5 && winCount<=15)
+        oppPoke = ['tentacruel','dewgong','lapras','seadra','blastoise','kingler','kabutops'];
+    else if(battleStart.map === 1 && winCount>15)
+        oppPoke = ['tentacruel','gyarados','greninja','blastoise','lapras','volcanion'];
+    else if(battleStart.map === 2 && winCount<=5)
+        oppPoke = ['sableye','drifloon','gastly','lampent','golett','phantump','decidueye'];
+    else if(battleStart.map === 2 && winCount>5 && winCount<15)
+        oppPoke = ['gengar','mismagius','giratina','chandelure','hoopa'];
+    else if(battleStart.map === 2 && winCount>15)
+        oppPoke = ['giratina','runerigus','decidueye','aegislash','golurk'];
+    else if(battleStart.map === 3 && winCount<=5)
+        oppPoke = ['charmeleon','vulpix','ninetales','houndour','flareon','ponyta','raboot','cyndaquil'];
+    else if(battleStart.map === 3 && winCount>5 && winCount<=15)
+        oppPoke = ['charizard','magmar','rapidash','typhlosion','heatran'];
+    else if(battleStart.map === 3 && winCount>15)
+        oppPoke = ['ninetales','magmortar','volcarona','reshiram','volcanion'];
     const oppPokeName = oppPoke[Math.floor(Math.random() * oppPoke.length)];
     const [myData, oppData] = await Promise.all ([
         fetch(`https://pokeapi.co/api/v2/pokemon/${myPokeName}`)
@@ -794,20 +1060,79 @@ function oppdealDamage (attackerAtk, defenderDef, movePower, defenderHp,moveName
     isMyDamaging = true;
     damageFrameCount = 0;
 }
-function myDied() {
-    let newData = document.createTextNode(`${battleStart.myPokeNames} has fainted`);
-    battleLog.appendChild(newData);
-    battleLog.appendChild(document.createElement('br'));
-    newData = document.createTextNode('YOU LOST');
-    battleLog.appendChild(newData);
-    document.getElementById('YOU').innerText = 'YOU LOST!';
-    document.getElementById('info').innerText = `You cannot use ${battleStart.myPokeNames} for the next Battle`;
-    document.getElementById('EOB').style.display = 'flex';
+
+// function chooseAnotherPokemon(){
+    
+// }
+async function loadAnotherPoke(myPokeName){
+    const myData = await fetch(`https://pokeapi.co/api/v2/pokemon/${myPokeName}`)
+        .then(res => res.json());
+    const myPokeImg = new Image();
+    const myPokeImgShiny = new Image();
+    myPokeImgShiny.src = myData.sprites.back_shiny;
+    myPokeImg.src = myData.sprites.back_default;
+    const myStats = {};
+    const whatIwant = ['hp','attack','defense'];
+    myData.stats.forEach(STAT => {
+        if(whatIwant.includes(STAT.stat.name)){
+            myStats[STAT.stat.name] = STAT.base_stat;
+        }
+    });
+    await Promise.all([
+        new Promise(res => myPokeImg.onload = res)
+    ]);
+    const myMoves = {};
+    const myMovePower = {};
+    const one = myData.moves;
+    for (let i = 0; i < 4; i++) {
+        const MOVE = one[i];
+        myMoves[i] = MOVE.move.name;
+        const MOVEDATA = await (
+            fetch(`${MOVE.move.url}`).then(res =>res.json())
+        );
+        myMovePower[i] = MOVEDATA.power;
+    }
+    battleStart.myPokeImage = myPokeImg;
+    battleStart.myPokeImageShiny =  myPokeImgShiny;
+    battleStart.myMoves = myMoves;
+    battleStart.myMovePowers = myMovePower;
+    battleStart.myStatss = myStats;
+    battleStart.drawNow = true;
+}
+async function myDied(requestNewPokemon) {
+    if(requestNewPokemon === true){ 
+        whenSomeoneDies = 0;
+        damageFrameCount = 0;
+        UI.style.display = 'none';
+        battleStart.myHealth=100;
+        myhealthTop.style.width = `${battleStart.myHealth}%`;
+        myhealthText.innerText = `Health : ${battleStart.myHealth}%`;
+        cancelAnimationFrame(battleloop);
+        choosemyPokemon();
+    }
+    else{
+        howManyTimesNewPokemon = 0;
+        const loseMoney = battleStart.oppHealth;
+        myMONEY-=loseMoney;
+        loseCount++;
+        MoneyNum.innerText = `${myMONEY}`;
+        WinNum.innerText = `${winCount}`;
+        LossNum.innerText = `${loseCount}`;
+        let newData = document.createTextNode(`${battleStart.myPokeNames} has fainted`);
+        battleLog.appendChild(newData);
+        battleLog.appendChild(document.createElement('br'));
+        newData = document.createTextNode('YOU LOST');
+        battleLog.appendChild(newData);
+        document.getElementById('YOU').innerText = 'YOU LOST!';
+        document.getElementById('info').innerHTML = `You cannot use ${battleStart.myPokeNames} for the next Battle<br>$${loseMoney} was removed from your account`;
+        document.getElementById('EOB').style.display = 'flex';
+    }
 }
 
 function oppDied(money) {
     let newData = document.createTextNode(`${battleStart.oppPokeNames} has fainted`);
     battleLog.appendChild(newData);
+    howManyTimesNewPokemon = 0;
     battleLog.appendChild(document.createElement('br'));
     newData = document.createTextNode('YOU WON');
     battleLog.appendChild(newData);
@@ -827,7 +1152,7 @@ function endGame(){
     isOppDamaging = false;
     whenSomeoneDies = 0;
     damageFrameCount = 0;
-
+    requestNewPokemon = false;
     myhealthTop.style.width = `${battleStart.myHealth}%`;
     myhealthText.innerText = `Health : ${battleStart.myHealth}%`;
     opphealthTop.style.width = `${battleStart.oppHealth}%`;
