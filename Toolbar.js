@@ -60,7 +60,10 @@ for(let i = 0;i<allProducts.length;i++){
     allProducts[i].originalDiv.innerText = `${allProducts[i].num}`;
 }
 BluePotion.addEventListener('click', ()=>{
-    if(Battle.start && battleStart.myHealth === 100){
+    if(welcome.style.display !== 'none'){
+        return;
+    }
+    else if(Battle.start && battleStart.myHealth === 100){
         const alreadyFullPopUp = document.createElement('div');
         Object.assign(alreadyFullPopUp.style, {
             display: 'flex',
@@ -94,6 +97,33 @@ BluePotion.addEventListener('click', ()=>{
         myhealthTop.style.width = `${battleStart.myHealth}%`;
         myhealthText.innerText = `Health : ${battleStart.myHealth}%`;
     }
+    else if(!Battle.start){
+        const notInGamePopUp = document.createElement('div');
+        Object.assign(notInGamePopUp.style, {
+            display: 'flex',
+            width: '40%',
+            height: '20%',
+            top: '40%',
+            background: 'rgba(241,223,147)',
+            position: 'absolute',
+            color: '#0A285F',
+            borderColor: '#D5A100',
+            borderStyle: 'solid',
+            borderWidth: '0.5rem',
+            fontSize: '1.5rem',
+            fontFamily: 'Pokemon',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center'
+        })
+        notInGamePopUp.innerHTML = '<p>Can only be used during Battle<p>';
+        cover.appendChild(notInGamePopUp);
+        cancelAnimationFrame(maploop);
+        setTimeout(() => {
+            notInGamePopUp.remove();
+            animate1();
+        }, 3000);
+    }
 });
 let opencount = 0;
 const POPUP = document.createElement('div');
@@ -112,7 +142,7 @@ Object.assign(POPUP.style, {
     borderRadius: '12px',
     zIndex: 10000,
 });
-POPUP.innerHTML = `<h3>Select a Pokémon to evolve</h3><ul id="evolveList"></ul>`;
+POPUP.innerHTML = `<h3>Select a Pokémon to evolve</h3><ul id="evolveList" style="list-style-type: none;"></ul>`;
 cover.appendChild(POPUP);
 
 async function getNextEvolution(pokeName) {
@@ -176,7 +206,37 @@ async function renderPokeList() {
 RedPotion.addEventListener('click', async () => {
     const list = document.getElementById('evolveList');
     list.innerHTML = '';
-    if(!Battle.start){
+    if(Battle.start){
+        const cannotInGamePopUp = document.createElement('div');
+        Object.assign(cannotInGamePopUp.style, {
+            display: 'flex',
+            width: '40%',
+            height: '20%',
+            top: '40%',
+            background: 'rgba(241,223,147)',
+            position: 'absolute',
+            color: '#0A285F',
+            borderColor: '#D5A100',
+            borderStyle: 'solid',
+            borderWidth: '0.5rem',
+            fontSize: '1.5rem',
+            fontFamily: 'Pokemon',
+            justifyContent: 'center',
+            alignItems: 'center',
+            textAlign: 'center'
+        })
+        cannotInGamePopUp.innerHTML = '<p>Cannot be used during Battle<p>';
+        cover.appendChild(cannotInGamePopUp);
+        cancelAnimationFrame(battleloop);
+        setTimeout(() => {
+            cannotInGamePopUp.remove();
+            animateBattle();
+        }, 3000);
+    }
+    else if(!Battle.start &&  welcome.style.display !== 'none'){
+        return;
+    }
+    else if(!Battle.start){
         if(allProducts[1].num > 0){
             if(opencount === 0){
                 POPUP.style.display = 'block';
@@ -271,6 +331,8 @@ async function createShop() {
 createShop();
 cover.appendChild(SHOP);
 Money.addEventListener('click',() => {
+    if(welcome.style.display !== 'none')
+        return
     if(opencount === 0){
         SHOP.style.display = 'flex';
         opencount++;
